@@ -20,18 +20,19 @@
  */
 package com.joanzapata.android.iconify;
 
-import android.content.Context;
-import android.graphics.Typeface;
-import android.text.Spanned;
-import android.widget.TextView;
-
-import java.io.IOException;
-
 import static android.text.Html.fromHtml;
 import static android.text.Html.toHtml;
 import static com.joanzapata.android.iconify.Utils.replaceIcons;
 import static com.joanzapata.android.iconify.Utils.resourceToFile;
 import static java.lang.String.valueOf;
+
+import java.io.IOException;
+import java.util.Map;
+
+import android.content.Context;
+import android.graphics.Typeface;
+import android.text.Spanned;
+import android.widget.TextView;
 
 public final class Iconify {
 
@@ -40,9 +41,28 @@ public final class Iconify {
     public static final String TAG = Iconify.class.getSimpleName();
 
     private static Typeface typeface = null;
+    
+    private static TypefaceData customTypeface = null;
 
     private Iconify() {
         // Prevent instantiation
+    }
+    
+    public static final void setCustomTypeface(Context context, 
+    		Typeface typeface, 
+    		String prefix, 
+    		Map<String, Character> glyphs) {
+    	customTypeface = new TypefaceData(typeface, prefix, glyphs);
+    }
+    
+    public static final void addIconsCustomTypeface(TextView... textViews) {
+    	if (customTypeface == null) {
+    		throw new IllegalStateException("Undefined customTypeface. Did you call setCustomTypeface method?");
+		}
+        for (TextView textView : textViews) {
+            textView.setTypeface(customTypeface.getTypeface());
+            textView.setText(compute(textView.getText()));
+        }
     }
 
     /**
@@ -53,6 +73,15 @@ public final class Iconify {
             textView.setTypeface(getTypeface(textView.getContext()));
             textView.setText(compute(textView.getText()));
         }
+    }
+    
+    public static CharSequence computeCustomTypeface(CharSequence charSequence) {
+        if (charSequence instanceof Spanned) {
+            String text = toHtml((Spanned) charSequence);
+            return fromHtml(Utils.replaceIconsCustomTypeface(customTypeface, new StringBuilder((text))).toString());
+        }
+        String text = charSequence.toString();
+        return Utils.replaceIconsCustomTypeface(customTypeface, new StringBuilder(text));
     }
 
     public static CharSequence compute(CharSequence charSequence) {
@@ -605,4 +634,8 @@ public final class Iconify {
             return character;
         }
     }
+
+	public static TypefaceData getCustomTypefaceData() {
+		return customTypeface;
+	}
 }

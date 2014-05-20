@@ -51,6 +51,8 @@ public class IconDrawable extends Drawable {
     private final Context context;
 
     private final Iconify.IconValue icon;
+    
+    private final char glyph;
 
     private TextPaint paint;
 
@@ -66,8 +68,22 @@ public class IconDrawable extends Drawable {
     public IconDrawable(Context context, Iconify.IconValue icon) {
         this.context = context;
         this.icon = icon;
+        this.glyph = '0';
         paint = new TextPaint();
         paint.setTypeface(Iconify.getTypeface(context));
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setUnderlineText(false);
+        paint.setColor(Color.BLACK);
+        paint.setAntiAlias(true);
+    }
+    
+    public IconDrawable(Context context, char glyph) {
+        this.context = context;
+        this.icon = null;
+        this.glyph = glyph;
+        paint = new TextPaint();
+        paint.setTypeface(Iconify.getCustomTypefaceData().getTypeface());
         paint.setStyle(Paint.Style.STROKE);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setUnderlineText(false);
@@ -160,7 +176,7 @@ public class IconDrawable extends Drawable {
     public void draw(Canvas canvas) {
         paint.setTextSize(getBounds().height());
         Rect textBounds = new Rect();
-        String textValue = valueOf(icon.character);
+        String textValue = icon != null ? valueOf(icon.character) : String.valueOf(glyph);
         paint.getTextBounds(textValue, 0, 1, textBounds);
         float textBottom = (getBounds().height() - textBounds.height()) / 2f + textBounds.height() - textBounds.bottom;
         canvas.drawText(textValue, getBounds().width() / 2f, textBottom, paint);

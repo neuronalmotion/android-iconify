@@ -25,32 +25,32 @@ import android.util.AttributeSet;
 
 import com.joanzapata.android.iconify.Iconify;
 
-public class IconButton extends Button {
-
-    public IconButton(Context context) {
+public class IconButtonCustom extends Button {
+	
+    public IconButtonCustom(Context context) {
         super(context);
         init();
     }
 
-    public IconButton(Context context, AttributeSet attrs) {
+    public IconButtonCustom(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public IconButton(Context context, AttributeSet attrs, int defStyle) {
+    public IconButtonCustom(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
     private void init() {
         if (!isInEditMode())
-          Iconify.addIcons(this);
+          Iconify.addIconsCustomTypeface(this);
         else
           this.setText(this.getText());
     }
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        super.setText(Iconify.compute(text), type);
+        super.setText(Iconify.computeCustomTypeface(text), type);
     }
 }

@@ -91,6 +91,25 @@ class Utils {
         }
     }
 
+    public static StringBuilder replaceIconsCustomTypeface(TypefaceData typefaceData, StringBuilder text) {
+        int startIndex = text.indexOf("{" + typefaceData.getPrefix());
+        if (startIndex == -1) {
+            return text;
+        }
+
+        int endIndex = text.substring(startIndex).indexOf("}") + startIndex + 1;
+
+        String iconString = text.substring(startIndex + 1, endIndex - 1);
+        try {
+            String iconValue = String.valueOf(typefaceData.getGlyphCode(iconString));
+            text = text.replace(startIndex, endIndex, iconValue);
+            return replaceIconsCustomTypeface(typefaceData, text);
+
+        } catch (IllegalArgumentException e) {
+            Log.w(Iconify.TAG, "Wrong icon name: " + iconString);
+            return text;
+        }
+    }
     public static StringBuilder replaceIcons(StringBuilder text) {
         int startIndex = text.indexOf("{fa");
         if (startIndex == -1) {
