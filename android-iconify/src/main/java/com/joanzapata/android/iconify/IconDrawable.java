@@ -51,7 +51,7 @@ public class IconDrawable extends Drawable {
     private final Context context;
 
     private final Iconify.IconValue icon;
-    
+
     private final char glyph;
 
     private TextPaint paint;
@@ -77,11 +77,11 @@ public class IconDrawable extends Drawable {
         paint.setColor(Color.BLACK);
         paint.setAntiAlias(true);
     }
-    
-    public IconDrawable(Context context, char glyph) {
+
+    public IconDrawable(Context context, String glyphCode) {
         this.context = context;
         this.icon = null;
-        this.glyph = glyph;
+        this.glyph = Iconify.getCustomTypefaceData().getGlyphCode(glyphCode);
         paint = new TextPaint();
         paint.setTypeface(Iconify.getCustomTypefaceData().getTypeface());
         paint.setStyle(Paint.Style.STROKE);
